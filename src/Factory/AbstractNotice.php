@@ -4,7 +4,6 @@ namespace DingdingNotice\Factory;
 
 use DingdingNotice\Bean\Message;
 use DingdingNotice\Config;
-use GuzzleHttp\Client;
 
 abstract class AbstractNotice
 {
@@ -17,15 +16,5 @@ abstract class AbstractNotice
     }
 
     abstract public function notice(Message $message);
-
-    public function requestDingDing($body)
-    {
-        $options['headers'] = ['Content-Type' => 'application/json;charset=utf-8'];
-        $options['json'] = $body;
-        $options['verify'] = false;
-        $guzzleClient = new Client();
-        $response = $guzzleClient->request('POST', $this->config->getNoticeUrl(), $options);
-        return json_decode($response->getBody()->getContents(), true);
-    }
 
 }

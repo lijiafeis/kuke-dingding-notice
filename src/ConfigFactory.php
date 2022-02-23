@@ -16,7 +16,6 @@ class ConfigFactory
         $instance->setEnable($config->get('dingding_notice.enable') ?? false);
         $instance->setNoticeUrl($config->get('dingding_notice.notice_url') ?? '');
         $instance->setSecret($config->get('dingding_notice.secret') ?? '');
-        $instance->setIgnoreException($config->get('dingding_notice.ignore_exception') ?? []);
         $instance->setAtMobile($config->get('dingding_notice.at_mobile') ?? []);
 
         return $instance;

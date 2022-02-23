@@ -9,7 +9,6 @@ class Config
     private bool $enable;
     private string $noticeUrl;
     private string $secret;
-    private array $ignoreException;
     private array $atMobile;
 
     /**
@@ -63,22 +62,6 @@ class Config
     /**
      * @return array
      */
-    public function getIgnoreException(): array
-    {
-        return $this->ignoreException;
-    }
-
-    /**
-     * @param array $ignoreException
-     */
-    public function setIgnoreException(array $ignoreException): void
-    {
-        $this->ignoreException = $ignoreException;
-    }
-
-    /**
-     * @return array
-     */
     public function getAtMobile(): array
     {
         return $this->atMobile;
@@ -94,7 +77,7 @@ class Config
 
     public function isAtAll(): bool
     {
-        return (bool)$this->atMobile;
+        return !(bool)$this->atMobile;
     }
 
 }

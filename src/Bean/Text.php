@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DingdingNotice\Bean;
 
+use DingdingNotice\Config;
+
 class Text extends Message
 {
     private string $content;
@@ -34,5 +36,16 @@ class Text extends Message
     }
 
 
+    public function initSendContent(Config $config): array
+    {
+        foreach ($config->getAtMobile() as $mobile) {
+            if ($mobile && $mobile != '*') {
+                $this->content .= "@{$mobile} ";
+            }
+        }
 
+        return [
+            'content' => $this->content
+        ];
+    }
 }

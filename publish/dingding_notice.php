@@ -7,10 +7,6 @@ return [
     'notice_url' => '',
     //签名
     'secret' => '',
-    //需要忽略的异常
-    'ignore_exception' => [
-
-    ],
     //被at的人员
     'at_mobile' => [
         '*' => '*',
