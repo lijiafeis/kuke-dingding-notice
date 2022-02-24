@@ -8,4 +8,6 @@ class Type
 {
     public const TEXT = 'text';
     public const MARKDOWN = 'markdown';
+    public const LINK = 'link';
+    public const FEEDCARD = 'feedCard';
 }

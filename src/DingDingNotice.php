@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DingdingNotice;
 
+use DingdingNotice\Bean\Link;
 use DingdingNotice\Bean\Markdown;
 use DingdingNotice\Bean\Text;
 
