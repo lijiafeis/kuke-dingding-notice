@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace DingdingNotice\Bean;
 
-use DingdingNotice\Config;
 
 class Markdown extends Message
 {
-    private string $subject;
-    private string $content;
+    private string $msgType = Type::MARKDOWN;
+    private string $title;
+    private string $text;
+    private array $atMobiles;
+    private bool $isAtAll;
 
     /**
      * @param string $subject
@@ -17,54 +19,118 @@ class Markdown extends Message
      */
     public function __construct(string $subject, string $content)
     {
-        $this->subject = $subject;
-        $this->content = $content;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getSubject(): string
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject): void
-    {
-        $this->subject = $subject;
+        parent::__construct();
+        $this->title = $subject;
+        $this->text = $this->initText($content);
+        $this->atMobiles = array_values($this->config->getAtMobile());
+        $this->isAtAll = $this->config->isAtAll();
     }
 
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getMsgType(): string
     {
-        return $this->content;
+        return $this->msgType;
     }
 
     /**
-     * @param string $content
+     * @param string $msgType
      */
-    public function setContent(string $content): void
+    public function setMsgType(string $msgType): void
     {
-        $this->content = $content;
+        $this->msgType = $msgType;
     }
 
-    public function initSendContent(Config $config): array
+    /**
+     * @return string
+     */
+    public function getTitle(): string
     {
-        foreach ($config->getAtMobile() as $mobile) {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText(string $text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAtMobiles(): array
+    {
+        return $this->atMobiles;
+    }
+
+    /**
+     * @param array $atMobiles
+     */
+    public function setAtMobiles(array $atMobiles): void
+    {
+        $this->atMobiles = $atMobiles;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAtAll(): bool
+    {
+        return $this->isAtAll;
+    }
+
+    /**
+     * @param bool $isAtAll
+     */
+    public function setIsAtAll(bool $isAtAll): void
+    {
+        $this->isAtAll = $isAtAll;
+    }
+
+
+
+    public function initText(string $text): string
+    {
+        foreach ($this->config->getAtMobile() as $mobile) {
             if ($mobile && $mobile != '*') {
-                $this->content .= "@{$mobile} ";
+                $text .= "@{$mobile} ";
             }
         }
 
+        return $text;
+    }
+
+    public function assembleRequestParams(): array
+    {
         return [
-            'title' => $this->subject,
-            'text' => $this->content,
+                'msgtype' => $this->msgType,
+                'markdown' => [
+                    'title' => $this->title,
+                    'text' => $this->text,
+                ],
+                'at' => [
+                    'atMobiles' => $this->atMobiles,
+                    'isAtAll' => $this->isAtAll,
+                ],
         ];
     }
 
