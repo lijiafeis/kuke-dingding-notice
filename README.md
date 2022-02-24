@@ -2,8 +2,10 @@
 Hyperf 框架的钉钉推送组件
 
 ## 使用
-`composer require kukewang/hyperf_xxl_job`
-
+1. 安装
+`composer require kukewang/dingding-notice`
+2. 发布配置文件
+   `php bin/hyperf.php vendor:publish kukewang/dingding-notice`
 ### text
 ```
 DingDingNotice::text('这是内容');
