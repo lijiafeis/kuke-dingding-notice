@@ -9,7 +9,7 @@ use Hyperf\Utils\Coroutine;
 
 class DingDingNotice
 {
-    public function notice(Message $message): bool
+    public static function notice(Message $message): bool
     {
         try {
             $config = $message->getConfig();
@@ -21,13 +21,13 @@ class DingDingNotice
             //同步执行
             if ($config->isSync() === true) {
                 $message->requestDingDing();
-            }
-
-            $id = Coroutine::create(function () use ($message) {
-                $message->requestDingDing();
-            });
-            if ($id === -1) {
-                return false;
+            } else {
+                $id = Coroutine::create(function () use ($message) {
+                    $message->requestDingDing();
+                });
+                if ($id === -1) {
+                    return false;
+                }
             }
         } catch (\Throwable $e) {
             return false;
