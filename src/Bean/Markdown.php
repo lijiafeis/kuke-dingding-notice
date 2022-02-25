@@ -38,7 +38,7 @@ class Markdown extends Message
         return $text;
     }
 
-    public function assembleRequestParams(): array
+    protected function assembleRequestParams(): array
     {
         return [
             'msgtype' => $this->msgType,

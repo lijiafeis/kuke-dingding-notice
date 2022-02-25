@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace DingdingNotice;
 
+use DingdingNotice\Exception\ConfigNotFoundException;
+
 class Config
 {
     private bool $enable;
     private string $noticeUrl;
+    private bool $sync;
     private string $secret;
     private array $atMobile;
 
@@ -26,6 +29,24 @@ class Config
     {
         $this->enable = $enable;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSync(): bool
+    {
+        return $this->sync;
+    }
+
+    /**
+     * @param bool $sync
+     */
+    public function setSync(bool $sync): void
+    {
+        $this->sync = $sync;
+    }
+
+
 
     /**
      * @return string
@@ -78,6 +99,19 @@ class Config
     public function isAtAll(): bool
     {
         return !(bool)$this->atMobile;
+    }
+
+    /**
+     * @throws ConfigNotFoundException
+     */
+    public function verify(): void
+    {
+        if (!$this->noticeUrl) {
+            throw new ConfigNotFoundException('通知url缺失');
+        }
+        if (!$this->secret) {
+            throw new ConfigNotFoundException('加签秘钥缺失');
+        }
     }
 
 }

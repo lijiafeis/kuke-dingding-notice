@@ -23,7 +23,7 @@ class Link extends Message
         $this->messageUrl = $messageUrl;
     }
 
-    public function assembleRequestParams(): array
+    protected function assembleRequestParams(): array
     {
         return [
             "msgtype" => $this->msgType,

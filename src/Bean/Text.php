@@ -35,7 +35,7 @@ class Text extends Message
         return $content;
     }
 
-    public function assembleRequestParams(): array
+    protected function assembleRequestParams(): array
     {
         return [
             'msgtype' => $this->msgType,

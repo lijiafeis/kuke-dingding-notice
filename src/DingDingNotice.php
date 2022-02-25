@@ -4,21 +4,34 @@ declare(strict_types=1);
 
 namespace DingdingNotice;
 
-use DingdingNotice\Bean\Link;
-use DingdingNotice\Bean\Markdown;
-use DingdingNotice\Bean\Text;
+use DingdingNotice\Bean\Message;
+use Hyperf\Utils\Coroutine;
 
 class DingDingNotice
 {
-    public static function text(string $content): bool
+    public function notice(Message $message): bool
     {
-        $message = new Text($content);
-        return $message->requestDingDing();
-    }
+        try {
+            $config = $message->getConfig();
+            $config->verify();
+            //判断开关是否打开
+            if ($config->isEnable() === false) {
+                return false;
+            }
+            //同步执行
+            if ($config->isSync() === true) {
+                $message->requestDingDing();
+            }
 
-    public static function markdown(string $subject, string $content): bool
-    {
-        $message = new Markdown($subject, $content);
-        return $message->requestDingDing();
+            $id = Coroutine::create(function () use ($message) {
+                $message->requestDingDing();
+            });
+            if ($id === -1) {
+                return false;
+            }
+        } catch (\Throwable $e) {
+            return false;
+        }
+        return true;
     }
 }

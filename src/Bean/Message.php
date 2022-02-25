@@ -20,10 +20,20 @@ abstract class Message implements RequestInterface
     }
 
     /**
+     * @return Config
+     */
+    public function getConfig(): Config
+    {
+        return $this->config;
+    }
+
+
+
+    /**
      * 组装请求钉钉的数据结构
      * @return array
      */
-    abstract public function assembleRequestParams(): array;
+    abstract protected function assembleRequestParams(): array;
 
     /**
      * 请求钉钉

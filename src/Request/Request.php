@@ -10,6 +10,7 @@ use DingdingNotice\Config;
 use DingdingNotice\Exception\RequestException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
 
 class Request
 {
@@ -18,28 +19,37 @@ class Request
      * @param array $body
      * @return bool
      * @throws RequestException
-     * @throws GuzzleException
+     * @throws GuzzleException|\JsonException
      */
     public static function requestDingDing(Config $config, array $body): bool
     {
-        //判断开关是否打开
-        if ($config->isEnable() === false) {
-            return false;
-        }
 
         $url = $config->getNoticeUrl();
         //加签
         $time = floor(microtime(true) * 1000);
         $sign = self::sign($time, $config->getSecret());
-        $url = $url . '&timestamp=' . $time . '&sign=' . $sign;
-
-        $options['headers'] = ['Content-Type' => 'application/json;charset=utf-8'];
-        $options['json'] = $body;
-        $options['verify'] = false;
+        $url .= '&timestamp=' . $time . '&sign=' . $sign;
+        $options = [
+            'headers' => ['Content-Type' => 'application/json;charset=utf-8'],
+            'json' => $body,
+            'verify' => false
+        ];
         $guzzleClient = new Client();
         $response = $guzzleClient->request('POST', $url, $options);
-        $data = json_decode($response->getBody()->getContents(), true);
-        if ($data['errcode'] != 0) {
+        return self::processingResult($response);
+
+    }
+
+    /**
+     * 解析校验api返回的数据
+     * @param ResponseInterface $response
+     * @return bool
+     * @throws RequestException|\JsonException
+     */
+    private static function processingResult(ResponseInterface $response): bool
+    {
+        $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        if ($data['errcode'] !== 0) {
             throw new RequestException($data['errmsg']);
         }
 
