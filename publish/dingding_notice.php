@@ -5,8 +5,6 @@ return [
     'enable' => true,
     //钉钉通知url
     'notice_url' => '',
-    //是否是同步返回调用结果
-    'sync' => true,
     //签名
     'secret' => '',
     //被at的人员

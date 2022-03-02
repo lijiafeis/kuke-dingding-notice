@@ -1,19 +1,25 @@
 ## [Hyperf-dingding-notice](https://github.com/lijiafeis/kuke-dingding-notice)
 Hyperf 框架的钉钉推送组件
 
-## 使用
+## 安装配置
 1. 安装
 `composer require kukewang/dingding-notice`
 2. 发布配置文件
    `php bin/hyperf.php vendor:publish kukewang/dingding-notice`
-### text
+
+### 使用
+组件封装了三种类型
+1. dingding-notice\src\Bean\Markdown
+2. dingding-notice\src\Bean\Text
+3. dingding-notice\src\Bean\Link
+
 ```
-DingDingNotice::text('这是内容');
+   $markdown = new Markdown("这是标题", "这是内容");
+   DingDingNotice::notice($markdown);
 ```
-### mark
-```
-DingDingNotice::markdown("这是标题", "这是内容");
-```
+
+如果需要发送异常通知，可直接调用 `exceptionNotice(Throwable $e)` 方法
+`DingDingNotice::exceptionNotice($e);`
 
 
 当前组件还未对发送限制做优化
